@@ -82,7 +82,7 @@ async def on_message(message):
                 elif command == 'LOG':
                     await message.channel.send(file=discord.File(os.path.join(airsoft, 'log.txt')))
                 elif command == 'DELETE':
-                    pass
+                    await message.channel.send('NOT YET')
 
     except Exception as Error:
         await message.channel.send(Error)
