@@ -1,9 +1,9 @@
-# *.spec
-# *.toc
-# *.zip
-# *.manifest
-# *.pkg
-# *.pyz
-# *.txt
-# *.html
-# *.pyc
+*.spec
+*.toc
+*.zip
+*.manifest
+*.pkg
+*.pyz
+*.txt
+*.html
+*.pyc
